@@ -1,6 +1,6 @@
 //! Check that private traits, impls, functions and const items have docs
 
-use syntax::ast::{Item, Item_, Visibility};
+use syntax::ast::{Item, ItemKind, Visibility};
 use rustc::lint::{EarlyContext, EarlyLintPass, LintArray, LintPass, LintContext};
 
 declare_lint!(PRIV_MISSING_DOCS, Warn,
@@ -18,10 +18,10 @@ impl LintPass for Pass {
 impl EarlyLintPass for Pass {
     fn check_item(&mut self, cx: &EarlyContext, i: &Item) {
         match i.node {
-            Item_::ItemConst(..) | Item_::ItemFn(..) | 
-                Item_::ItemImpl(..) | Item_::ItemTrait(..) |
-                Item_::ItemStruct(..) | Item_::ItemEnum(..) | 
-                Item_::ItemMod(..) => {
+            ItemKind::Const(..) | ItemKind::Fn(..) | 
+                ItemKind::Impl(..) | ItemKind::Trait(..) |
+                ItemKind::Struct(..) | ItemKind::Enum(..) | 
+                ItemKind::Mod(..) => {
                     if let Visibility::Public = i.vis {
                         // Publicly visible items are handled by other lints
                         return;
